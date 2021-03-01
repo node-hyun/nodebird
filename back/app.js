@@ -47,6 +47,7 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
+
 app.get('/', (req, res) => {
     res.send("hello express");
 });
@@ -59,6 +60,7 @@ app.use('/post', postRouter);
 app.use('/posts', postsRouter);
 app.use('/user', userRouter);
 app.use('/search', searchRouter);
+
 
 app.listen(3065, () => {
     console.log("Ecpress Server is Excuting");

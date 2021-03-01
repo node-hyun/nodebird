@@ -15,29 +15,14 @@ import { END } from 'redux-saga';
 
 
 const Profile = () => {
-    const dispatch = useDispatch();
     const { me } = useSelector((state) => state.user);
+
     useEffect(() => {
         if (!(me && me.id)) {
             Router.push('/');
         }
     }, [me && me.id]);
-    // if (!me) {
-    //     return null;
-    // }
 
-    useEffect(() => {
-
-
-        if (me) {
-            // dispatch({
-            //     type: LOAD_FOLLOWERS_REQUEST,
-            // });
-            // dispatch({
-            //     type: LOAD_FOLLOWINGS_REQUEST,
-            // });
-        }
-    }, []);
     return (
         <>
             <Head>
