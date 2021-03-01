@@ -15,6 +15,8 @@ const passportConfig = require('./passport');
 const postRouter = require('./routes/post');
 const userRouter = require('./routes/user');
 const postsRouter = require('./routes/posts');
+const searchRouter = require('./routes/search');
+
 
 dotenv.config();
 // passport index.js 에 설정한것을 익스프레스에 적용
@@ -56,6 +58,7 @@ app.use('/', express.static(path.join(__dirname, 'uploads')));
 app.use('/post', postRouter);
 app.use('/posts', postsRouter);
 app.use('/user', userRouter);
+app.use('/search', searchRouter);
 
 app.listen(3065, () => {
     console.log("Ecpress Server is Excuting");

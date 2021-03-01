@@ -1,18 +1,15 @@
-// import React from "react";
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import PropTypes from "prop-types";
 import Link from "next/link";
 import { Menu, Row, Col } from "antd";
-import { useSelector } from "react-redux";
-import SearchForm from './SearchForm';
 import LoginForm from './LoginForm';
 import UserProfile from './UserProfile';
+import SearchForm from './SearchForm';
 
 
 const AppLayout = ({ children }) => {
-    // const isLoggedIn = useSelector((state) => state.user.isLoggedIn)
     const { me } = useSelector((state) => state.user);
-    // console.log('me(AppLayout for login component option) : ', me);
 
     return (
         <div>
@@ -34,10 +31,6 @@ const AppLayout = ({ children }) => {
             {/* {children} */}
             <Row gutter="8">
                 <Col xs={24} md={6}>
-                    {/* {isLoggedIn 
-                        ? <UserProfile  /> 
-                        : <LoginForm  />
-                    } */}
                     {me
                         ? <UserProfile />
                         : <LoginForm />}

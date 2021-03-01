@@ -5,27 +5,19 @@ import { StopOutlined } from "@ant-design/icons";
 
 
 const FollowList = ({ header, data }) => {
+    console.log("data : ", data);
     return (
-        <List
-            style={{ marginBttom: 20 }}
-            grid={{ gutter: 4, xs: 2, md: 3 }}
-            size="small"
-            header={<div>{header}</div>}
-            loadMore={
-                <div style={{ textAlign: "center", margin: "10px 0" }}>
-                    <Button style={{ width: "100%" }}>더보기</Button>
-                </div>
-            }
-            bordered
-            dataSource={data}
-            renderItem={(item) => (
-                <List.Item style={{ marginTop: "20px" }}>
-                    <Card actions={[<StopOutlined key="stop" />]}>
-                        <Card.Meta description={item.nickname} />
+        <div style={{display:"flex",justifyContent:"space-between", flexWrap:"wrap"}}>
+            {data.map((v)=> {
+                return (
+                    <Card style={{width:"30%"}} actions={[<StopOutlined key="stop" />]}>
+                        <Card.Meta description={v.nickname} />
                     </Card>
-                </List.Item>
-            )}
-        />
+                )
+            })}
+            <Button block>더보기</Button>
+            <br/><br/>
+        </div>
     );
 };
 

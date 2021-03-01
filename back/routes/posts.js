@@ -4,6 +4,7 @@ const router = express.Router();
 const { Op } = require('sequelize');
 
 
+
 router.get('/', async (req, res, next) => { // GET /posts
     try {
         const where = {};

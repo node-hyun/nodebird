@@ -2,45 +2,47 @@ import AppLayout from "../components/AppLayout";
 import Head from "next/head";
 import NicknameEditForm from '../components/NicknameEditForm';
 import FollowList from '../components/FollowList';
-
 import React, { useEffect } from "react";
-import { useSelector } from 'react-redux';
 import Router from 'next/router';
+import { useSelector, useDispatch } from 'react-redux';
+import { LOAD_FOLLOWERS_REQUEST, LOAD_FOLLOWINGS_REQUEST } from '../reducers/user';
+
+import { LOAD_USER_REQUEST } from '../reducers/user';
+import wrapper from '../store/configureStore';
+import axios from 'axios';
+import { END } from 'redux-saga';
 
 
-// 팔로잉(내가 팔로잉 하는 사람)
-// 팔로워(나를 팔로잉 하는 사람)
-// const followingList = [
-//     { nickname: "제로초" },
-//     { nickname: "장기효" },
-//     { nickname: "k덕배" },
-// ];
-
-// const followerList = [
-//     { nickname: "음바페" },
-//     { nickname: "호빵맨" },
-//     { nickname: "이순신" },
-// ];
 
 const Profile = () => {
+    const dispatch = useDispatch();
     const { me } = useSelector((state) => state.user);
-    console.log("me : ", me);
-
     useEffect(() => {
         if (!(me && me.id)) {
             Router.push('/');
         }
     }, [me && me.id]);
-    if (!me) {
-        return null;
-    }
+    // if (!me) {
+    //     return null;
+    // }
 
+    useEffect(() => {
+
+
+        if (me) {
+            // dispatch({
+            //     type: LOAD_FOLLOWERS_REQUEST,
+            // });
+            // dispatch({
+            //     type: LOAD_FOLLOWINGS_REQUEST,
+            // });
+        }
+    }, []);
     return (
         <>
             <Head>
                 <title>내 프로필 | NodeBird</title>
             </Head>
-
             <AppLayout>
                 <NicknameEditForm />
                 <FollowList header="팔로잉 목록" data={me.Followings} />
@@ -49,6 +51,31 @@ const Profile = () => {
         </>
     );
 };
+
+
+export const getServerSideProps = wrapper.getServerSideProps(async (context) => {
+    console.log('getServerSideProps start');
+    console.log(context.req.headers);
+    const cookie = context.req ? context.req.headers.cookie : '';
+    axios.defaults.headers.Cookie = '';
+    if (context.req && cookie) {
+        axios.defaults.headers.Cookie = cookie;
+    }
+    context.store.dispatch({
+        type: LOAD_USER_REQUEST,
+    });
+
+    context.store.dispatch({
+        type: LOAD_FOLLOWERS_REQUEST,
+    });
+    context.store.dispatch({
+        type: LOAD_FOLLOWINGS_REQUEST,
+    });
+
+    context.store.dispatch(END);
+    console.log('getServerSideProps end');
+    await context.store.sagaTask.toPromise();
+});
 
 export default Profile;
 

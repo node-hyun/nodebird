@@ -18,10 +18,63 @@ import {
     LOAD_USER_FAILURE,
     LOAD_USER_REQUEST,
     LOAD_USER_SUCCESS,
-} from '../reducers/user';
 
+    LOAD_FOLLOWERS_REQUEST, 
+    LOAD_FOLLOWERS_SUCCESS, 
+    LOAD_FOLLOWERS_FAILURE,
+
+    LOAD_FOLLOWINGS_REQUEST, 
+    LOAD_FOLLOWINGS_SUCCESS,
+    LOAD_FOLLOWINGS_FAILURE,
+
+} from '../reducers/user';
 import axios from "axios";
 
+function loadFollowersAPI(data) {
+    console.log("data from loadFollowersAPI: ", data);
+    // return axios.get(`/user/followers?limit=${data.limit || 3}`, data);
+    return axios.get('/user/followers', data);
+}
+
+function* loadFollowers(action) {
+    try {
+        const result = yield call(loadFollowersAPI, action.data);
+        console.log("result from saga for loadFollowersAPI:", result);
+        yield put({
+            type: LOAD_FOLLOWERS_SUCCESS,
+            data: result.data,
+        });
+    } catch (err) {
+        console.error(err);
+        yield put({
+            type: LOAD_FOLLOWERS_FAILURE,
+            error: err.response.data,
+        });
+    }
+}
+
+function loadFollowingsAPI(data) {
+    console.log("data from loadFollowingsAPI: ", data);
+    return axios.get(`/user/followings`, data);
+}
+
+function* loadFollowings(action) {
+    try {
+        const result = yield call(loadFollowingsAPI, action.data);
+        console.log("result from saga for loadFollowersAPI:", result);
+
+        yield put({
+            type: LOAD_FOLLOWINGS_SUCCESS,
+            data: result.data,
+        });
+    } catch (err) {
+        console.error(err);
+        yield put({
+            type: LOAD_FOLLOWINGS_FAILURE,
+            error: err.response.data,
+        });
+    }
+}
 
 function signUpAPI(data) {
     // console.log("saga signUpAPI 실행 확인 회원 가입 정보는 => ", data);
@@ -185,6 +238,14 @@ function* watchLoadUser() {
     yield takeLatest(LOAD_USER_REQUEST, loadUser);
 }
 
+function* watchLoadFollowers() {
+    yield takeLatest(LOAD_FOLLOWERS_REQUEST, loadFollowers);
+}
+
+function* watchLoadFollowings() {
+    yield takeLatest(LOAD_FOLLOWINGS_REQUEST, loadFollowings);
+}
+
 export default function* userSaga() {
     yield all([
         fork(watchLogIn),
@@ -193,5 +254,7 @@ export default function* userSaga() {
         fork(watchUnfollow),
         fork(watchSignUp),
         fork(watchLoadUser),
+        fork(watchLoadFollowers),
+        fork(watchLoadFollowings),
     ]);
 }

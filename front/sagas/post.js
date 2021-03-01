@@ -37,9 +37,40 @@ import {
     RETWEET_SUCCESS,
     RETWEET_FAILURE,
 
+    SEARCH_POSTS_REQUEST,
+    SEARCH_POSTS_SUCCESS,
+    SEARCH_POSTS_FAILURE,
+
 } from '../reducers/post';
 import { ADD_POST_TO_ME, REMOVE_POST_OF_ME } from '../reducers/user';
 
+// add your api 1122
+function SearchPostsAPI(data) {
+    console.log('data : ', data);
+    return axios.get(`/search/posts/${data.search_word}/${data.lastId || 0}?`);
+}
+
+function* searchPosts(action) {
+    try {
+        console.log("action.data : ", action.data);
+        const result = yield call(SearchPostsAPI, action.data);
+        console.log("result for SearchPostsAPI : ", result);
+        console.log("result for SearchPostsAPI : ", result.data.length);
+
+        yield put({
+            type: SEARCH_POSTS_SUCCESS,
+            data: result.data
+        });
+
+    } catch (err) {
+        console.log("error : ", err);
+        console.error(err);
+        yield put({
+            type: SEARCH_POSTS_FAILURE,
+            data: err.response.data,
+        });
+    }
+}
 
 function retweetAPI(data) {
     return axios.post(`/post/${data}/retweet`);
@@ -151,14 +182,12 @@ function loadPostsAPI(lastId) {
 }
 function* loadPosts(action) {
     try {
-        // const result = yield call(loadPostsAPI, action.data);
         const result = yield call(loadPostsAPI, action.lastId);
         console.log("result for loadPostsAPI : ", result);
         console.log("result for loadPostsAPI : ", result.data.length);
 
         yield put({
             type: LOAD_POSTS_SUCCESS,
-            // data: generateDummyPost(10),
             data: result.data
         });
     } catch (err) {
@@ -286,6 +315,10 @@ function* watchRetweet() {
     yield takeLatest(RETWEET_REQUEST, retweet);
 }
 
+function* watchSearchPosts() {
+    yield takeLatest(SEARCH_POSTS_REQUEST, searchPosts);
+}
+
 export default function* postSaga() {
     yield all([
         fork(watchAddPost),
@@ -297,5 +330,6 @@ export default function* postSaga() {
         fork(watchLikePost),
         fork(watchUnlikePost),
         fork(watchRetweet),
+        fork(watchSearchPosts),
     ]);
 }

@@ -31,7 +31,6 @@ const upload = multer({
 
 
 // make your router 1122
-
 router.post('/:postId/retweet', async (req, res, next) => { // POST /post/1/retweet
     try {
         // 리트윗 대상의 id로 검색하여 (리트윗한 포스팅까지 모두 합쳐 모든 포스팅 정보에 대해)

@@ -20,7 +20,7 @@ export const initialState = {
     loadPostsLoading: false,
     loadPostsDone: false,
     loadPostsError: null,
-    
+
     uploadImagesLoading: false,
     uploadImagesDone: false,
     uploadImagesError: null,
@@ -41,14 +41,23 @@ export const initialState = {
     retweetDone: false,
     retweetError: null,
 
+    searchPostsLoading: false,
+    searchPostsDone: false,
+    searchPostsError: null,
+
     imagePaths: [],
     hasMorePosts: true,
 };
 
 // 액션 추가
+export const SEARCH_POSTS_REQUEST = 'SEARCH_POSTS_REQUEST';
+export const SEARCH_POSTS_SUCCESS = 'SEARCH_POSTS_SUCCESS';
+export const SEARCH_POSTS_FAILURE = 'SEARCH_POSTS_FAILURE';
+
 export const ADD_POST_REQUEST = 'ADD_POST_REQUEST';
 export const ADD_POST_SUCCESS = 'ADD_POST_SUCCESS';
 export const ADD_POST_FAILURE = 'ADD_POST_FAILURE';
+
 // 댓글 추가
 export const ADD_COMMENT_REQUEST = 'ADD_COMMENT_REQUEST';
 export const ADD_COMMENT_SUCCESS = 'ADD_COMMENT_SUCCESS';
@@ -173,7 +182,7 @@ export default (state = initialState, action) => {
             case REMOVE_IMAGE:
                 draft.imagePaths = draft.imagePaths.filter((v, i) => i !== action.data);
                 break;
-                
+
             case DELETE_COMMENT_REQUEST:
                 draft.delteCommentLoading = false;
                 draft.delteCommentDone = false;
@@ -221,7 +230,7 @@ export default (state = initialState, action) => {
                 draft.unlikePostDone = true;
                 break;
             }
-            
+
             case UNLIKE_POST_FAILURE:
                 draft.unlikePostLoading = false;
                 draft.unlikePostError = action.error;
@@ -241,6 +250,21 @@ export default (state = initialState, action) => {
             case RETWEET_FAILURE:
                 draft.retweetLoading = false;
                 draft.retweetError = action.error;
+                break;
+
+            case SEARCH_POSTS_REQUEST:
+                draft.searchPostsLoading = true;
+                draft.searchPostsDone = false;
+                break;
+            case SEARCH_POSTS_SUCCESS:
+                draft.searchPostsLoading = false;
+                draft.searchPostsDone = true;
+                draft.mainPosts = action.data;
+                draft.hasMorePosts = action.data.length === 10;
+                break;
+            case SEARCH_POSTS_FAILURE:
+                draft.searchPostsLoading = false;
+                draft.searchPostsError = action.error;
                 break;
 
             default:

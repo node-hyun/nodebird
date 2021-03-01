@@ -6,6 +6,46 @@ const passport = require('passport');
 const { User,Post } = require('../models');
 
 // add router for  /user/****
+
+router.get('/followers', async (req, res, next) => { // GET /user/followers
+    try {
+        const user = await User.findOne({ where: { id: req.user.id } });
+        if (!user) {
+            res.status(403).send('없는 사람을 찾으려고 하시네요?');
+        }
+        // const followers = await user.getFollowers();
+        const followers = await user.getFollowers({
+            attributes: ['id', 'nickname'],
+            // limit: parseInt("3", 10),
+        });
+        console.log("followers : ", followers);
+        res.status(200).json(followers);
+    } catch (error) {
+        console.error(error);
+        next(error);
+    }
+});
+
+router.get('/followings', async (req, res, next) => { // GET /user/followings
+    try {
+        console.log("req.user.id : ", req.user.id);
+        const user = await User.findOne({ where: { id: req.user.id } });
+        if (!user) {
+            res.status(403).send('없는 사람을 찾으려고 하시네요?');
+        }
+        // const followings = await user.getFollowings();s
+        const followings = await user.getFollowings({
+            attributes: ['id', 'nickname'],
+            // limit: parseInt("3", 10),
+        });
+
+        res.status(200).json(followings);
+    } catch (error) {
+        console.error(error);
+        next(error);
+    }
+});
+
 router.patch('/:userId/follow', async (req, res, next) => { // PATCH /user/1/follow
     try {
         const user = await User.findOne({ where: { id: req.params.userId } });
@@ -115,7 +155,7 @@ router.post('/login', (req, res, next) => {
                     attributes: ['id'],
                 }]
             })
-            console.log("fullUserWithoutPassword : ", fullUserWithoutPassword);
+            // console.log("fullUserWithoutPassword : ", fullUserWithoutPassword);
             return res.status(200).json(fullUserWithoutPassword); // 성공 응답 코드와 함께 유저 정보를 응답
         });
     })(req, res, next);
@@ -153,5 +193,45 @@ router.post('/', async (req, res, next) => {
     }
 });
 
+
+
+// router.get('/followers',  async (req, res, next) => { // GET /user/followers
+
+//     console.log("req.user.id ::::::::::::::::::::::::::::", req.user.id);
+
+//     try {
+//         const user = await User.findOne({ where: { id: req.user.id } });
+//         if (!user) {
+//             res.status(403).send('없는 사람을 찾으려고 하시네요?');
+//         }
+//         const followers = await user.getFollowers({
+//             attributes: ['id', 'nickname'],
+//             limit: parseInt(req.query.limit, 10),
+//         });
+//         res.status(200).json(followers);
+//     } catch (error) {
+//         console.error(error);
+//         next(error);
+//     }
+// });
+
+// router.get('/followings',  async (req, res, next) => { // GET /user/followings
+//     try {
+//         console.log("req.user.id ::::::::::::::::::::::::::::", req.user.id);
+
+//         const user = await User.findOne({ where: { id: req.user.id } });
+//         if (!user) {
+//             res.status(403).send('없는 사람을 찾으려고 하시네요?');
+//         }
+//         const followings = await user.getFollowings({
+//             attributes: ['id', 'nickname'],
+//             limit: parseInt(req.query.limit, 10),
+//         });
+//         res.status(200).json(followings);
+//     } catch (error) {
+//         console.error(error);
+//         next(error);
+//     }
+// });
 
 module.exports = router;
