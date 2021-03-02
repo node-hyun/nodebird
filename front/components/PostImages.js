@@ -14,8 +14,8 @@ const PostImages = ({ images }) => {
     if (images.length === 1) {
         return (
             <>
-                <img role="presentation" src={`http://localhost:3065/${images[0].src}`} alt={images[0].src} onClick="" />
-                {/* <img role="presentation" src={`http://localhost:3065/${images[0]}`} alt={images[0].src} onClick="" /> */}
+                <img role="presentation" src={`http://127.0.0.1:3065/${images[0].src}`} alt={images[0].src} onClick="" />
+                {/* <img role="presentation" src={`http://127.0.0.1:3065/${images[0]}`} alt={images[0].src} onClick="" /> */}
             </>
         );
     }
@@ -23,8 +23,8 @@ const PostImages = ({ images }) => {
         return (
             <>
                 <div>
-                    <img role="presentation" src={`http://localhost:3065/${images[0].src}`} alt={images[0].src} width="50%" onClick="" />
-                    <img role="presentation" src={`http://localhost:3065/${images[1].src}`} alt={images[1].src} width="50%" onClick="" />
+                    <img role="presentation" src={`http://127.0.0.1:3065/${images[0].src}`} alt={images[0].src} width="50%" onClick="" />
+                    <img role="presentation" src={`http://127.0.0.1:3065/${images[1].src}`} alt={images[1].src} width="50%" onClick="" />
                 </div>
             </>
         );
@@ -32,7 +32,7 @@ const PostImages = ({ images }) => {
     return (
         <>
             <div>
-                <img role="presentation" src={`http://localhost:3065/${images[0].src}`} alt={images[0].src} width="50%" onClick="" />
+                <img role="presentation" src={`http://127.0.0.1:3065/${images[0].src}`} alt={images[0].src} width="50%" onClick="" />
                 <div
                     role="presentation"
                     style={{ display: 'inline-block', width: '50%', textAlign: 'center', verticalAlign: 'middle' }}

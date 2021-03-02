@@ -9,26 +9,47 @@ import {
     FOLLOW_FAILURE,
     FOLLOW_REQUEST,
     FOLLOW_SUCCESS,
-    UNFOLLOW_FAILURE,
     UNFOLLOW_REQUEST,
     UNFOLLOW_SUCCESS,
+    UNFOLLOW_FAILURE,
+    REMOVE_FOLLOWER_REQUEST,
+    REMOVE_FOLLOWER_SUCCESS,
+    REMOVE_FOLLOWER_FAILURE,
     SIGN_UP_REQUEST,
     SIGN_UP_SUCCESS,
     SIGN_UP_FAILURE,
     LOAD_USER_FAILURE,
     LOAD_USER_REQUEST,
     LOAD_USER_SUCCESS,
-
     LOAD_FOLLOWERS_REQUEST, 
     LOAD_FOLLOWERS_SUCCESS, 
     LOAD_FOLLOWERS_FAILURE,
-
     LOAD_FOLLOWINGS_REQUEST, 
     LOAD_FOLLOWINGS_SUCCESS,
     LOAD_FOLLOWINGS_FAILURE,
-
 } from '../reducers/user';
 import axios from "axios";
+
+function removeFollowerAPI(data) {
+    return axios.delete(`/user/follower/${data}`);
+}
+
+function* removeFollower(action) {
+    try {
+        const result = yield call(removeFollowerAPI, action.data);
+        console.log("result (리무부 팔로워) :  result");
+        yield put({
+            type: REMOVE_FOLLOWER_SUCCESS,
+            data: result.data,
+        });
+    } catch (err) {
+        console.error(err);
+        yield put({
+            type: REMOVE_FOLLOWER_FAILURE,
+            error: err.response.data,
+        });
+    }
+}
 
 function loadFollowersAPI(data) {
     console.log("data from loadFollowersAPI: ", data);
@@ -246,12 +267,17 @@ function* watchLoadFollowings() {
     yield takeLatest(LOAD_FOLLOWINGS_REQUEST, loadFollowings);
 }
 
+function* watchRemoveFollower() {
+    yield takeLatest(REMOVE_FOLLOWER_REQUEST, removeFollower);
+}
+
 export default function* userSaga() {
     yield all([
         fork(watchLogIn),
         fork(watchLogOut),
         fork(watchFollow),
         fork(watchUnfollow),
+        fork(watchRemoveFollower),
         fork(watchSignUp),
         fork(watchLoadUser),
         fork(watchLoadFollowers),

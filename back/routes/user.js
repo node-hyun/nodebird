@@ -7,16 +7,18 @@ const { isLoggedIn, isNotLoggedIn } = require('./middlewares');
 
 
 // add router for  /user/****
+
 router.get('/followers',isLoggedIn, async (req, res, next) => { // GET /user/followers
     try {
         const user = await User.findOne({ where: { id: req.user.id } });
+        
         if (!user) {
             res.status(403).send('없는 사람을 찾으려고 하시네요?');
         }
         // const followers = await user.getFollowers();
         const followers = await user.getFollowers({
             attributes: ['id', 'nickname'],
-            // limit: parseInt("3", 10),
+            limit: parseInt(req.query.limit, 10),
         });
         console.log("followers : ", followers);
         res.status(200).json(followers);
@@ -36,7 +38,7 @@ router.get('/followings', async (req, res, next) => {
         // const followings = await user.getFollowings();
         const followings = await user.getFollowings({
             attributes: ['id', 'nickname'],
-            limit: parseInt("3", 10),
+            limit: parseInt(req.query.limit, 10),
         });
 
         res.status(200).json(followings);
@@ -188,6 +190,20 @@ router.post('/', async (req, res, next) => {
         })
         res.status(201).send('회원 가입 success but 비밀번호 암호화 ok')
     } catch (err) {
+        console.error(error);
+        next(error);
+    }
+});
+
+router.delete('/follower/:userId', isLoggedIn, async (req, res, next) => { // DELETE /user/follower/2
+    try {
+        const user = await User.findOne({ where: { id: req.params.userId } });
+        if (!user) {
+            res.status(403).send('없는 사람을 차단하려고 하시네요?');
+        }
+        await user.removeFollowings(req.user.id);
+        res.status(200).json({ UserId: parseInt(req.params.userId, 10) });
+    } catch (error) {
         console.error(error);
         next(error);
     }
