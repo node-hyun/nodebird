@@ -4,19 +4,45 @@ import Head from "next/head";
 import PostForm from "../components/PostForm";
 import PostCard from "../components/PostCard";
 import { LOAD_POSTS_REQUEST } from '../reducers/post';
-import { LOAD_USER_REQUEST } from '../reducers/user';
+import { LOAD_MY_INFO_REQUEST } from '../reducers/user';
 import { useSelector, useDispatch } from 'react-redux';
 import wrapper from '../store/configureStore';
 import { END } from 'redux-saga';
 import axios from 'axios';
-// import Router from 'next/router';
+import { notification } from "antd";
+
 
 
 const Home = () => {
     const { me } = useSelector((state) => state.user);
     const dispatch = useDispatch();
-    const { mainPosts, hasMorePosts, loadPostsLoading } = useSelector((state) => state.post);
+    const { mainPosts, hasMorePosts, loadPostsLoading, addPostDone, removePostDone } = useSelector((state) => state.post);
+    const { followError, unfollowError } = useSelector((state) => state.user);
+    
+    useEffect(() => {
+        if (addPostDone){
+            notification.open({
+                message: '알림',
+                description: "posting 성공!"
+            })
+        }
+    }, [addPostDone]);
+    
+    useEffect(() => {
+        if (removePostDone) {
+            notification.open({
+                message: '알림',
+                description: "delete 성공!"
+            })
+        }
+    }, [removePostDone]);
 
+    if (followError) {
+        alert("followError : " + followError)
+    }
+    if (unfollowError) {
+        alert("unfollowError : " + unfollowError)
+    }
 
     useEffect(() => {
         function onScroll() {
@@ -69,7 +95,7 @@ export const getServerSideProps = wrapper.getServerSideProps(async (context) => 
     }
 
     context.store.dispatch({
-        type: LOAD_USER_REQUEST,
+        type: LOAD_MY_INFO_REQUEST,
     });
     context.store.dispatch({
         type: LOAD_POSTS_REQUEST,
@@ -81,4 +107,3 @@ export const getServerSideProps = wrapper.getServerSideProps(async (context) => 
 });
 
 export default Home;
-

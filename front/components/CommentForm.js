@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect } from 'react';
-import { Button, Form, Input } from 'antd';
+import { Button, Form, Input, notification } from 'antd';
 import useInput from '../hooks/useInput';
 
 import { useSelector, useDispatch } from 'react-redux';
@@ -16,6 +16,10 @@ const CommentForm = ({ post }) => {
     useEffect(() => {
         if (addCommentDone) {
             setCommentText('');
+            notification.open({
+                message: '알림',
+                description: "댓글 달기 성공 !!"
+            })
         }
     }, [addCommentDone]);
 

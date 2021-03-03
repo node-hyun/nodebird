@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect } from "react";
 import Head from "next/head";
 import AppLayout from "../components/AppLayout";
-import { Form, Input, Checkbox, Button } from "antd";
+import { Form, Input, Checkbox, Button, notification } from "antd";
 import useInput from '../hooks/useInput';
 import { useDispatch ,useSelector} from 'react-redux';
 import { SIGN_UP_REQUEST } from '../reducers/user';
@@ -22,7 +22,20 @@ const Signup = () => {
     const { signUpLoading, me, signUpDone, signUpError} = useSelector((state) => state.user);
 
     useEffect(() => {
+        if (signUpDone) {
+            notification.open({
+                message: '알림',
+                description: "회원 가입 성공! 로그인 페이지로 이동하겠습니다"
+            })
+        }
+    }, [signUpDone]);
+
+    useEffect(() => {
         if (me && me.id) {
+            notification.open({
+                message: '알림',
+                description: "로그인 상태입니다 메인 페이지로 이동합니다!"
+            })
             Router.replace('/');
         }
     }, [me && me.id]);

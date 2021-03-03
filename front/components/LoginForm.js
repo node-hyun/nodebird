@@ -1,6 +1,6 @@
-import { Input, Button } from "antd";
+import { Input, Button, notification } from "antd";
 import Link from "next/link";
-import { LoginFormWrapper, LoginButtonWrapper} from "./style/LoginFormStyle.js";
+import { LoginFormWrapper, LoginButtonWrapper } from "./style/LoginFormStyle.js";
 import { useDispatch, useSelector } from 'react-redux';
 import { LOG_IN_REQUEST } from '../reducers/user';
 import useInput from '../hooks/useInput';
@@ -14,8 +14,19 @@ const LoginForm = () => {
     const [email, onChangeEmail] = useInput('');
 
     const [password, setPassword] = useState("");
-    // const { logInLoading } = useSelector((state) => state.user);
-    const { logInLoading, logInError } = useSelector((state) => state.user);
+    const { me, logInLoading, logInDone, logOutLoading, logOutDone, logOutUser, logInError } = useSelector((state) => state.user);
+
+    // console.log("logOutDone : ", logOutDone);
+    // console.log("logInDone : ", logInDone);
+
+    useEffect(() => {
+        if (logOutDone) {
+            notification.open({
+                message: '알림',
+                description: `안녕히 가세요 ${logOutUser} 님 !!`
+            })
+        }
+    }, [logOutDone]);
 
     useEffect(() => {
         if (logInError) {

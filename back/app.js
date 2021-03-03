@@ -16,6 +16,7 @@ const postRouter = require('./routes/post');
 const userRouter = require('./routes/user');
 const postsRouter = require('./routes/posts');
 const searchRouter = require('./routes/search');
+const hashtagRouter = require('./routes/hashtag');
 
 
 dotenv.config();
@@ -60,6 +61,7 @@ app.use('/post', postRouter);
 app.use('/posts', postsRouter);
 app.use('/user', userRouter);
 app.use('/search', searchRouter);
+app.use('/hashtag', hashtagRouter);
 
 
 app.listen(3065, () => {

@@ -92,6 +92,13 @@ export const RETWEET_REQUEST = 'RETWEET_REQUEST';
 export const RETWEET_SUCCESS = 'RETWEET_SUCCESS';
 export const RETWEET_FAILURE = 'RETWEET_FAILURE';
 
+export const LOAD_HASHTAG_POSTS_REQUEST = 'LOAD_HASHTAG_POSTS_REQUEST';
+export const LOAD_HASHTAG_POSTS_SUCCESS = 'LOAD_HASHTAG_POSTS_SUCCESS';
+export const LOAD_HASHTAG_POSTS_FAILURE = 'LOAD_HASHTAG_POSTS_FAILURE';
+
+export const LOAD_USER_POSTS_REQUEST = 'LOAD_USER_POSTS_REQUEST';
+export const LOAD_USER_POSTS_SUCCESS = 'LOAD_USER_POSTS_SUCCESS';
+export const LOAD_USER_POSTS_FAILURE = 'LOAD_USER_POSTS_FAILURE';
 
 export default (state = initialState, action) => {
     return produce(state, (draft) => {
@@ -156,7 +163,6 @@ export default (state = initialState, action) => {
                 draft.loadPostsDone = true;
                 draft.mainPosts = draft.mainPosts.concat(action.data);
                 draft.hasMorePosts = action.data.length === 10;
-
                 break;
             case LOAD_POSTS_FAILURE:
                 draft.loadPostsLoading = false;
@@ -184,13 +190,12 @@ export default (state = initialState, action) => {
                 break;
 
             case DELETE_COMMENT_REQUEST:
-                draft.delteCommentLoading = false;
-                draft.delteCommentDone = false;
-                draft.delteCommentError = null;
+                draft.deleteCommentLoading = false;
+                draft.deleteCommentError = null;
                 break;
             case DELETE_COMMENT_SUCCESS:
                 draft.deleteCommentLoading = false;
-                draft.delteCommentDone = true;
+                draft.deleteCommentDone = true;
                 const index = draft.mainPosts.findIndex((v) => v.id === action.data.PostId)
                 const CommentsForDelete = draft.mainPosts[index].Comments;
                 draft.mainPosts[index].Comments = CommentsForDelete.filter((v) => v.id !== action.data.CommentId)
@@ -265,6 +270,28 @@ export default (state = initialState, action) => {
             case SEARCH_POSTS_FAILURE:
                 draft.searchPostsLoading = false;
                 draft.searchPostsError = action.error;
+                break;
+
+            case LOAD_POSTS_REQUEST:
+            case LOAD_USER_POSTS_REQUEST:
+            case LOAD_HASHTAG_POSTS_REQUEST:
+                draft.loadPostsLoading = true;
+                draft.loadPostsDone = false;
+                draft.loadPostsError = null;
+                break;
+            case LOAD_HASHTAG_POSTS_SUCCESS:
+            case LOAD_USER_POSTS_SUCCESS:
+            case LOAD_POSTS_SUCCESS:
+                draft.loadPostsLoading = false;
+                draft.loadPostsDone = true;
+                draft.mainPosts = draft.mainPosts.concat(action.data);
+                draft.hasMorePosts = action.data.length === 10;
+                break;
+            case LOAD_POSTS_FAILURE:
+            case LOAD_USER_POSTS_FAILURE:
+            case LOAD_HASHTAG_POSTS_FAILURE:
+                draft.loadPostsLoading = false;
+                draft.loadPostsError = action.error;
                 break;
 
             default:

@@ -1,6 +1,6 @@
 // import React from 'react'
 import React, { useEffect } from "react";
-import { Avatar, Comment } from 'antd';
+import { Avatar, Comment, notification } from 'antd';
 import { CloseSquareOutlined } from '@ant-design/icons';
 import { CommentRowRapper } from './style/CommentRowStyle';
 import { useSelector, useDispatch } from 'react-redux';
@@ -10,9 +10,16 @@ import { DELETE_COMMENT_REQUEST } from '../reducers/post'
 function CommentRow({ comment, PostId }) {
     const dispatch = useDispatch();
     console.log(comment);
-    const { deleteCommentDone } = useSelector((state) => state.post);
+    const { deleteCommentDone, deleteCommentLoading } = useSelector((state) => state.post);
 
-    
+    useEffect(() => {
+        notification.open({
+            message: '알림',
+            description: "댓글 삭제 성공 !!"
+        })
+    }, [deleteCommentDone]);
+
+
     function deleteComment() {
         console.log("deleteComment button 클릭");
         console.log("comment 정보 확인 : ", comment);
@@ -27,13 +34,6 @@ function CommentRow({ comment, PostId }) {
 
     }
 
-    useEffect(() => {
-        if (deleteCommentDone){
-            alert("댓글 삭제 성공");
-        }
-
-    }, [deleteCommentDone]); 
-
     return (
         <CommentRowRapper>
             <Comment
@@ -41,7 +41,7 @@ function CommentRow({ comment, PostId }) {
                 avatar={<Avatar>{comment.User.nickname[0]}</Avatar>}
                 content={comment.content}
             />
-            <CloseSquareOutlined onClick={deleteComment} style={{ fontSize: '20px', color: '#08c' }} />
+            <CloseSquareOutlined loading={deleteCommentLoading} onClick={deleteComment} style={{ fontSize: '20px', color: '#08c' }} />
         </CommentRowRapper>
     )
 }

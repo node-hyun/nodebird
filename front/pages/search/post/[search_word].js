@@ -4,7 +4,7 @@ import Head from "next/head";
 import PostForm from "../../../components/PostForm";
 import PostCard from "../../../components/PostCard";
 import { SEARCH_POSTS_REQUEST } from '../../../reducers/post';
-import { LOAD_USER_REQUEST } from '../../../reducers/user';
+import { LOAD_MY_INFO_REQUEST } from '../../../reducers/user';
 import { useSelector, useDispatch } from 'react-redux';
 import wrapper from '../../../store/configureStore';
 import { END } from 'redux-saga';
@@ -72,7 +72,7 @@ export const getServerSideProps = wrapper.getServerSideProps(async (context) => 
     console.log("context.params.search_word : ", context.params.search_word);
 
     context.store.dispatch({
-        type: LOAD_USER_REQUEST,
+        type: LOAD_MY_INFO_REQUEST,
     });
 
     context.store.dispatch({
@@ -87,4 +87,3 @@ export const getServerSideProps = wrapper.getServerSideProps(async (context) => 
 });
 
 export default SearchPost;
-

@@ -1,5 +1,5 @@
-import { Avatar, Card, Button  } from "antd";
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect, useState } from "react";
+import { Avatar, Card, Button, notification } from "antd";
 
 
 // import { useDispatch } from "react-redux";
@@ -19,8 +19,15 @@ const dummy = {
 
 const UserProfile = ({ setIsLoggedIn }) => {
     const dispatch = useDispatch();
-    const { me, logOutLoading } = useSelector((state) => state.user);
+    const { me, logOutLoading, logInLoading, logInDone, logOutDone } = useSelector((state) => state.user);
+    const [logOutUser, setlogOutUser] = useState("")
 
+    useEffect(() => {
+        notification.open({
+            message: '알림',
+            description: "환영합니다 " + me.nickname + "님"
+        })
+    }, [me && logInDone]);
 
     const onLogOut = useCallback(() => {
         // setIsLoggedIn(false);
@@ -28,6 +35,7 @@ const UserProfile = ({ setIsLoggedIn }) => {
         dispatch({
             type: LOG_OUT_REQUEST,
         });
+
     }, []);
 
     return (

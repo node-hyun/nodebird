@@ -4,7 +4,7 @@ import Head from "next/head";
 import PostForm from "../components/PostForm";
 import PostCard from "../components/PostCard";
 import { LOAD_POSTS_REQUEST } from '../reducers/post';
-import { LOAD_USER_REQUEST } from '../reducers/user';
+import { LOAD_MY_INFO_REQUEST } from '../reducers/user';
 import { useSelector, useDispatch } from 'react-redux';
 import wrapper from '../store/configureStore';
 import { END } from 'redux-saga';
@@ -73,11 +73,11 @@ export const getServerSideProps = wrapper.getServerSideProps(async (context) => 
     }
 
     context.store.dispatch({
-        type: LOAD_USER_REQUEST,
+        type: LOAD_MY_INFO_REQUEST,
     });
     context.store.dispatch({
         type: SEARCH_POSTS_REQUEST,
-        data: searchWord    
+        data: searchWord
     });
     // 아래의 두줄은success 요청할때까지 기다리라는 뜻
     context.store.dispatch(END);
@@ -85,4 +85,3 @@ export const getServerSideProps = wrapper.getServerSideProps(async (context) => 
 });
 
 export default Home;
-

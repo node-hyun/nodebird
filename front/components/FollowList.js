@@ -9,6 +9,10 @@ import { UNFOLLOW_REQUEST, REMOVE_FOLLOWER_REQUEST } from '../reducers/user';
 const FollowList = ({ header, data, onClickMore, loading }) => {
     const dispatch = useDispatch();
 
+    if (!data) {
+        return "데이터 로딩중";
+    }
+
     const onCancel = (id) => () => {
         if (header === '팔로잉') {
             dispatch({
@@ -21,7 +25,6 @@ const FollowList = ({ header, data, onClickMore, loading }) => {
                 data: id,
             });
         }
-
     };
 
     console.log("data : ", data);
